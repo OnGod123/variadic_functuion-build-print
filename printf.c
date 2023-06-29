@@ -2,13 +2,15 @@
 #include <stdio.h>
 #include <stdarg.h>
 /**
+ * _printf - print arguements to the terminal
  * @format: a pointer to arguement of characters
  * @...: arguent list
- * return: any data types based on input
+ *
+ * return - _printf  returns any data types based on input
  */
 int _printf(const char *format, ...)
 {
-int count, w;
+int w, count;
 va_list args;
 va_start(args, format);
 while (*format != '\0')
@@ -49,14 +51,12 @@ default:
 	count += 2;
 	break;
 }
-
 }
 else
 {
-if (*format == '%')
-	_putchar('%');
 _putchar(*format);
 count++;
+va_end(args);
 }
 format++;
 }
