@@ -1,66 +1,92 @@
 #include "main.h"
-#include <stdio.h>
 #include <stdarg.h>
+
 /**
- * _printf - print arguements to the terminal
- * @format: a pointer to arguement of characters
- * @...: arguent list
+ * _printf - function that prints to stdout
+ * @format: The string to be printed
  *
- * return - _printf  returns any data types based on input
+ * Return: The length of the final string
  */
 int _printf(const char *format, ...)
 {
-int w, count;
-va_list args;
-va_start(args, format);
-while (*format != '\0')
-{
-if (*format == '%')
-{
-format++;
-switch (*format)
-{
-case '%':
-	count += printf("%d%%\n", va_arg(args, int));
-	break;
-case 'd':
-	count += printf("%d\n", va_arg(args, int));
-	break;
-case 'f':
-	count += printf("%f\n", va_arg(args, double));
-	break;
-case 'c':
-	count += printf("%c\n", va_arg(args, int));
-	break;
-case 's':
-	count += printf("%s\n", va_arg(args, char*));
-	break;
-case 'p':
-	w = va_arg(args, int);
-	count += printf("%p\n", &w);
-	break;
-case 'o':
-	count += printf("%o\n", va_arg(args, int));
-	break;
-case 'x':
-	count += printf("%x\n", va_arg(args, int));
-	break;
-default:
-	_putchar('%');
-	_putchar(*format);
-	count += 2;
-	break;
-}
-}
-else
-{
-_putchar(*format);
-count++;
-va_end(args);
-}
-format++;
-}
-va_end(args);
-return (0);
-}
+	int i = 0;
+	int char_len = 0;
+	
+	va_list arg_list;
+	va_start(arg_list, format);
+	
+	for(i = 0; format[i] != '\0'; i++)
+	{
+		char charac = format[i];
 
+		if (charac != '%'){
+			_putchar(charac);
+			char_len++;
+		}
+		else
+		{
+			i++;
+			if (format[i] == 'c')
+			{
+				int c_check = char_check(va_arg(arg_list, int));
+
+				char_len += c_check;
+			}
+			else if(format[i] == 's')
+			{
+				int s_check = str_check(va_arg(arg_list, char *));
+
+				char_len += s_check;
+			}
+			else if(format[i] == 'd' || format[i] == 'i')
+			{
+				int i_check = int_check(va_arg(arg_list, int));
+				
+				char_len += i_check;
+			}
+			else if(format[i] == 'u')
+			{
+				int i_check = unsigned_int_check(va_arg(arg_list, unsigned int));
+				
+				char_len += i_check;
+			}
+			else if(format[i] == 'x')
+			{
+				int i_check = hexadecimal_lower_check(va_arg(arg_list, unsigned int));
+				
+				char_len += i_check;
+			}
+			else if(format[i] == 'X')
+			{
+				int i_check = hexadecimal_upper_check(va_arg(arg_list, unsigned int));
+				
+				char_len += i_check;
+			}
+			else if(format[i] == 'o')
+			{
+				int i_check = octal_check(va_arg(arg_list, unsigned int));
+				
+				char_len += i_check;
+			}
+			else if(format[i] == 'p')
+			{
+				int i_check = address_check(va_arg(arg_list, int));
+				
+				char_len += i_check;
+			}
+			else if(format[i] == '%')
+			{
+				_putchar('%');
+				char_len += 1;
+			}
+			else
+			{
+				_putchar('%');
+				_putchar(format[i]);
+				char_len += 2;
+			}
+		}
+	}
+	va_end(arg_list);
+	return(char_len);
+}
